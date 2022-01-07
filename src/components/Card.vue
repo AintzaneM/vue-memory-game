@@ -23,7 +23,7 @@ export default {
 
 
     setup(props, context){
-        console.log("props",props.value)
+        // console.log("props",props.value)
         // console.log("context",context)
         const selectCard = () => {
             context.emit("select-card", {
@@ -42,7 +42,7 @@ export default {
 <template>
     <div class="card" @click="selectCard">
         <div v-if="visible" class="card-face">
-            {{value}} - {{matched}}
+            {{value}} 
         </div>
         <div v-else class="card-back">
             Back

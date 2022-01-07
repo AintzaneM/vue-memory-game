@@ -14,12 +14,13 @@
   </section>
 
   <h2>{{status}}</h2>
+  <!-- <h2>Remain Cards: {{cardTotal}}</h2> -->
   
   
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Card from './components/Card.vue';
 
 export default {
@@ -30,27 +31,39 @@ export default {
   setup() {
     const cardList = ref([])
     const userSelect = ref ([])
-    const status = ref ("")
+    
+    const status = computed(() => {
+      if(cardTotal.value === 0) {
+        return 'Player wins!!!'
+      } else {
+        return `Remain Cards: ${cardTotal.value}`
+      }
+    })
+   
 
+    const cardTotal = computed(() => {
+      const cardFiltered = cardList.value.filter (card => card.visible === false).length
+      return cardFiltered
+    })
     
 
     // console.log(userSelect.value)
     
     for (let i = 0; i < 12; i++) {
       cardList.value.push({
-        value: i,
+        value: 10,
         visible: false,
         position: i,
         matched: false
       })
     }
 
-    console.log("value",cardList.value)
-    console.log("cardList",cardList)
+    // console.log("value",cardList.value)
+    // console.log("cardList",cardList)
 
 
     const flipCard = payload => {
-      console.log("payload", payload)
+      // console.log("payload", payload)
 
       cardList.value[payload.position].visible = true
       
@@ -62,17 +75,17 @@ export default {
     }
 
     watch(userSelect, currentValue => {
-      console.log("current", currentValue)
+      // console.log("current", currentValue)
       
       if(currentValue.length === 2) {
         const cardFirst = currentValue[0]
         const cardSecond = currentValue[1]
-         console.log("cardFirst", cardFirst)
-         console.log("cardSecond", cardSecond)
+        //  console.log("cardFirst", cardFirst)
+        //  console.log("cardSecond", cardSecond)
 
          if(cardFirst.faceCardValue === cardSecond.faceCardValue) {
            status.value="Matched"
-           cardList.value[cardFirst.position].matched = false
+           cardList.value[cardFirst.position].matched = true
            cardList.value[cardSecond.position].matched = true
          }else {
            status.value="Not Matched"
@@ -90,9 +103,9 @@ export default {
 
 
          
-        console.log("That's it!")
+        // console.log("That's it!")
         userSelect.value.length = 0
-        console.log("userSelect",userSelect.value)
+        // console.log("userSelect",userSelect.value)
       }
     }, {deep:true})
 
@@ -101,6 +114,9 @@ export default {
       flipCard,
       userSelect,
       status,
+      cardTotal
+      // cardRemain,
+      // pairsRemain
     }
 
     
