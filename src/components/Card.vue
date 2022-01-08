@@ -42,7 +42,7 @@ export default {
 <template>
     <div class="card" @click="selectCard">
         <div v-if="visible" class="card-face">
-            {{value}} 
+            {{value}} - {{matched}} 
         </div>
         <div v-else class="card-back">
             Back

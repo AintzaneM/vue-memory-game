@@ -15,8 +15,8 @@
 
   <h2>{{status}}</h2>
   
-  <button @clilck="shuffleCards">Shuffle</button>
-  <!-- <h2>Remain Cards: {{cardTotal}}</h2> -->
+  <button @click="shuffleCards">Shuffle</button>
+  <h2>Remain Cards: {{cardTotal}}</h2>
   
   
 </template>
@@ -36,32 +36,33 @@ export default {
   setup() {
     const cardList = ref([])
     const userSelect = ref ([])
-    const status = ref ("")
+    // const status = ref ("")
     
-    // const status = computed(() => {
-    //   if(cardTotal.value === 0) {
-    //     return 'Player wins!!!'
-    //   } else {
-    //     return `Remain Cards: ${cardTotal.value}`
-    //   }
-    // })
+    const status = computed(() => {
+      if(cardTotal.value === 0) {
+        return 'Player wins!!!'
+      } else {
+        return `Remain Cards: ${cardTotal.value}`
+      }
+    })
    
-
     const cardTotal = computed(() => {
       const cardFiltered = cardList.value.filter (card => card.visible === false).length
       return cardFiltered
     })
     
     const shuffleCards = () => {
+      // console.log(">>>>>>>>>>",cardList.value)
       cardList.value = _.shuffle(cardList.value)
+      
     }
 
     // console.log(userSelect.value)
     
     for (let i = 0; i < 12; i++) {
       cardList.value.push({
-        value: 10,
-        visible: false,
+        value: i,
+        visible: true,
         position: i,
         matched: false
       })
@@ -102,16 +103,7 @@ export default {
            cardList.value[cardSecond.position].visible = false
 
          }
-
-         
-
-
-
-
-         
-
-
-         
+        
         // console.log("That's it!")
         userSelect.value.length = 0
         // console.log("userSelect",userSelect.value)
