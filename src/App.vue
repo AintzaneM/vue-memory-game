@@ -7,19 +7,24 @@
     :value="card.value" 
     :visible="card.visible"
     :position="card.position"
-    :match="card.matched"
+    :matched="card.matched"
     @select-card="flipCard"
     />
     
   </section>
 
   <h2>{{status}}</h2>
+  
+  <button @clilck="shuffleCards">Shuffle</button>
   <!-- <h2>Remain Cards: {{cardTotal}}</h2> -->
   
   
 </template>
 
 <script>
+// import VueLodash from 'vue-lodash';
+import _ from 'lodash';
+// import shuffle from 'lodash/shuffle'
 import { computed, ref, watch } from 'vue';
 import Card from './components/Card.vue';
 
@@ -31,14 +36,15 @@ export default {
   setup() {
     const cardList = ref([])
     const userSelect = ref ([])
+    const status = ref ("")
     
-    const status = computed(() => {
-      if(cardTotal.value === 0) {
-        return 'Player wins!!!'
-      } else {
-        return `Remain Cards: ${cardTotal.value}`
-      }
-    })
+    // const status = computed(() => {
+    //   if(cardTotal.value === 0) {
+    //     return 'Player wins!!!'
+    //   } else {
+    //     return `Remain Cards: ${cardTotal.value}`
+    //   }
+    // })
    
 
     const cardTotal = computed(() => {
@@ -46,6 +52,9 @@ export default {
       return cardFiltered
     })
     
+    const shuffleCards = () => {
+      cardList.value = _.shuffle(cardList.value)
+    }
 
     // console.log(userSelect.value)
     
@@ -62,15 +71,15 @@ export default {
     // console.log("cardList",cardList)
 
 
-    const flipCard = payload => {
-      // console.log("payload", payload)
+    const flipCard = data => {
+      console.log("data", data)
 
-      cardList.value[payload.position].visible = true
+      cardList.value[data.position].visible = true
       
       if (userSelect.value[0]) {
-        userSelect.value[1] = payload
+        userSelect.value[1] = data
       } else {
-        userSelect.value[0] = payload
+        userSelect.value[0] = data
       }
     }
 
@@ -114,7 +123,8 @@ export default {
       flipCard,
       userSelect,
       status,
-      cardTotal
+      cardTotal,
+      shuffleCards
       // cardRemain,
       // pairsRemain
     }
