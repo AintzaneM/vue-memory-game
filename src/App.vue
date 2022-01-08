@@ -21,7 +21,7 @@
 </template>
 
 <script>
-// import VueLodash from 'vue-lodash';
+
 import _ from 'lodash';
 // import shuffle from 'lodash/shuffle'
 import { computed, ref, watch } from 'vue';
@@ -43,7 +43,7 @@ export default {
       }
     })
     const cardTotal = computed(() => {
-      const cardFiltered = cardList.value.filter (card => card.visible === false).length
+      const cardFiltered = cardList.value.filter (card => card.visible === true).length
       return cardFiltered
     })
     const shuffleCards = () => {
@@ -65,14 +65,40 @@ export default {
 
     // console.log(userSelect.value)
     
-    for (let i = 0; i < 12; i++) {
+    const cardItems = [1, 2, 3, 4, 5, 6]
+
+    cardItems.forEach(item => {
       cardList.value.push({
-        value: i,
+        value: item,
         visible: false,
-        position: i,
+        position: null,
         matched: false
       })
-    }
+
+       cardList.value.push({
+        value: item,
+        visible: false,
+        position: null,
+        matched: false
+      })
+    })
+
+    cardList.value = cardList.value.map((card, index )=> {
+      return {
+        ...card,
+        position:index
+      }
+    })
+
+
+    // for (let i = 0; i < 12; i++) {
+    //   cardList.value.push({
+    //     value: i,
+    //     visible: false,
+    //     position: i,
+    //     matched: false
+    //   })
+    // }
 
     // console.log("value",cardList.value)
     // console.log("cardList",cardList)
@@ -82,9 +108,14 @@ export default {
       // console.log("data", data)
 
       cardList.value[data.position].visible = true
-      if (userSelect.value[0]) {
-        userSelect.value[1] = data
-      } else {
+      if(userSelect.value[0]) {
+        if (userSelect.value[0].position === data.position  && userSelect.value[0] === data.faceCardValue) {
+          return
+          
+        } else {
+          userSelect.value[1] = data
+        }
+      }else {
         userSelect.value[0] = data
       }
     }
@@ -103,9 +134,13 @@ export default {
            cardList.value[cardFirst.position].matched = true
            cardList.value[cardSecond.position].matched = true
          }else {
+           setTimeout(() => {
+
+           
           //  status.value="Not Matched"
            cardList.value[cardFirst.position].visible = false
            cardList.value[cardSecond.position].visible = false
+           },2000)
 
          }
         
