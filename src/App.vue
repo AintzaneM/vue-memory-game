@@ -15,8 +15,7 @@
 
   <h2>{{status}}</h2>
   
-  <button @click="shuffleCards">Shuffle</button>
-  <h2>Remain Cards: {{cardTotal}}</h2>
+  <button @click="reloadGame">Restart</button>
   
   
 </template>
@@ -36,8 +35,6 @@ export default {
   setup() {
     const cardList = ref([])
     const userSelect = ref ([])
-    // const status = ref ("")
-    
     const status = computed(() => {
       if(cardTotal.value === 0) {
         return 'Player wins!!!'
@@ -45,16 +42,25 @@ export default {
         return `Remain Cards: ${cardTotal.value}`
       }
     })
-   
     const cardTotal = computed(() => {
       const cardFiltered = cardList.value.filter (card => card.visible === false).length
       return cardFiltered
     })
-    
     const shuffleCards = () => {
       // console.log(">>>>>>>>>>",cardList.value)
-      cardList.value = _.shuffle(cardList.value)
-      
+      cardList.value = _.shuffle(cardList.value) 
+    }
+
+    const reloadGame = () => {
+      shuffleCards();
+      cardList.value = cardList.value.map((card, index) => {
+        return {
+          ...card,
+          matched: false,
+          visible: false,
+          position: index,
+        }
+      })
     }
 
     // console.log(userSelect.value)
@@ -62,7 +68,7 @@ export default {
     for (let i = 0; i < 12; i++) {
       cardList.value.push({
         value: i,
-        visible: true,
+        visible: false,
         position: i,
         matched: false
       })
@@ -73,10 +79,9 @@ export default {
 
 
     const flipCard = data => {
-      console.log("data", data)
+      // console.log("data", data)
 
       cardList.value[data.position].visible = true
-      
       if (userSelect.value[0]) {
         userSelect.value[1] = data
       } else {
@@ -94,11 +99,11 @@ export default {
         //  console.log("cardSecond", cardSecond)
 
          if(cardFirst.faceCardValue === cardSecond.faceCardValue) {
-           status.value="Matched"
+          //  status.value="Matched"
            cardList.value[cardFirst.position].matched = true
            cardList.value[cardSecond.position].matched = true
          }else {
-           status.value="Not Matched"
+          //  status.value="Not Matched"
            cardList.value[cardFirst.position].visible = false
            cardList.value[cardSecond.position].visible = false
 
@@ -116,7 +121,8 @@ export default {
       userSelect,
       status,
       cardTotal,
-      shuffleCards
+      shuffleCards,
+      reloadGame
       // cardRemain,
       // pairsRemain
     }
