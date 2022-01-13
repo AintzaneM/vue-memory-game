@@ -11,26 +11,20 @@ export default {
             required:true
         },
         value: {
-            type: Number,
+            type: String,
             required: true
         },
         visible: {
             type: Boolean,
             default: false
-        }
+        },
     },
-
-
-
     setup(props, context){
-        // console.log("props",props.value)
-        // console.log("context",context)
         const selectCard = () => {
             context.emit("select-card", {
                 position:props.position,
                 faceCardValue: props.value
             })
-        
         }
         return {
             selectCard
@@ -42,36 +36,33 @@ export default {
 <template>
     <div class="card" @click="selectCard">
         <div v-if="visible" class="card-face">
-            {{value}} - {{matched}} 
+            <img :src="`images/${value}.png`" /> 
         </div>
         <div v-else class="card-back">
-            Back
-        </div>
-        
+        </div> 
     </div>
 </template>
 
 <style>
 .card {
-  border: 5px solid #ccc;
   position: relative;
 }
-
 .card >.card-face, .card-back {
     width: 100px;
     height: 100px;
     position: absolute;
-
 }
-
 .card-face {
-    background-color: red;
     color: white;
-    
+    border-radius: 10px;
+    opacity: 50%;
 }
-
 .card-back {
-    background-color: blue;
+    border-radius: 10px;
+    background-image: url('/images/back.png');
     color: white;
+}
+.card-back:hover{
+    opacity: 50%;
 }
 </style>
